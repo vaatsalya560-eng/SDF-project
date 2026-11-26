@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SkyHigh Airlines — Flight Reservation</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="brand">
+      <div class="brand-mark">✈</div>
+      <div>
+        <div>SkyHigh Airlines</div>
+        <div class="brand-sub">Reservation System</div>
+      </div>
+    </div>
+    <nav class="main-nav">
+      <button class="nav-link active" onclick="goPage('search', this)">Search Flights</button>
+      <button class="nav-link" onclick="goPage('bookings', this)">My Bookings</button>
+      <button class="nav-link" onclick="goPage('admin', this)">Admin</button>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+
+  <!-- SEARCH PAGE -->
+  <section id="page-search" class="page active">
+    <div class="search-panel">
+      <div class="section-title" style="margin-bottom:20px;">Find a flight</div>
+      <div class="search-grid">
+        <div class="field">
+          <label for="from">From</label>
+          <select id="from">
+            <option value="">Select departure</option>
+            <option>New York</option>
+            <option>Los Angeles</option>
+            <option>Chicago</option>
+            <option>Miami</option>
+            <option>London</option>
+            <option>Paris</option>
+            <option>Tokyo</option>
+            <option>Dubai</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="to">To</label>
+          <select id="to">
+            <option value="">Select destination</option>
+            <option>New York</option>
+            <option>Los Angeles</option>
+            <option>Chicago</option>
+            <option>Miami</option>
+            <option>London</option>
+            <option>Paris</option>
+            <option>Tokyo</option>
+            <option>Dubai</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="date">Date</label>
+          <input type="date" id="date">
+        </div>
+        <div class="field">
+          <label for="pax">Passengers</label>
+          <select id="pax">
+            <option value="1">1 passenger</option>
+            <option value="2">2 passengers</option>
+            <option value="3">3 passengers</option>
+            <option value="4">4 passengers</option>
+            <option value="5">5 passengers</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>&nbsp;</label>
+          <button class="btn btn-primary" style="width:100%;" onclick="doSearch()">Search flights</button>
+        </div>
+      </div>
+    </div>
+    <div id="results"></div>
+  </section>
+
+  <!-- BOOKINGS PAGE -->
+  <section id="page-bookings" class="page">
+    <div class="section-title">My bookings</div>
+    <div class="section-desc">All reservations made on this device.</div>
+    <div id="bookings-list"></div>
+  </section>
+
+  <!-- ADMIN PAGE -->
+  <section id="page-admin" class="page">
+    <div class="section-title">Admin dashboard</div>
+    <div class="section-desc">Manage flights and view reservation statistics.</div>
+    <div class="stats-row" id="stats"></div>
+    <div class="table-card">
+      <div class="table-card-head">
+        <div style="font-weight:600;color:var(--navy);">All flights</div>
+        <button class="btn btn-primary btn-sm" onclick="openAddFlight()">+ Add flight</button>
+      </div>
+      <div style="overflow-x:auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Code</th>
+              <th>Airline</th>
+              <th>Route</th>
+              <th>Date</th>
+              <th>Time</th>
+              <th>Price</th>
+              <th>Seats</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="admin-table"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- BOOKING MODAL -->
+<div class="modal-bg" id="modal-booking">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>Complete your reservation</h3>
+      <button class="modal-close" onclick="closeModal('modal-booking')">&times;</button>
+    </div>
+    <div class="modal-body" id="booking-body"></div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" onclick="closeModal('modal-booking')">Cancel</button>
+      <button class="btn btn-primary" onclick="confirmBooking()">Confirm booking</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD FLIGHT MODAL -->
+<div class="modal-bg" id="modal-addflight">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>Add new flight</h3>
+      <button class="modal-close" onclick="closeModal('modal-addflight')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-field" style="margin-bottom:14px;">
+        <label>Airline</label>
+        <input type="text" id="nf-airline" value="SkyHigh Airlines">
+      </div>
+      <div class="passenger-grid">
+        <div class="form-field">
+          <label>From</label>
+          <select id="nf-from">
+            <option>New York</option><option>Los Angeles</option>
+            <option>Chicago</option><option>Miami</option>
+            <option>London</option><option>Paris</option>
+            <option>Tokyo</option><option>Dubai</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label>To</label>
+          <select id="nf-to">
+            <option>Los Angeles</option><option>New York</option>
+            <option>Chicago</option><option>Miami</option>
+            <option>London</option><option>Paris</option>
+            <option>Tokyo</option><option>Dubai</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label>Date</label>
+          <input type="date" id="nf-date">
+        </div>
+        <div class="form-field">
+          <label>Departure time</label>
+          <input type="time" id="nf-time">
+        </div>
+        <div class="form-field">
+          <label>Price (USD)</label>
+          <input type="number" id="nf-price" placeholder="299">
+        </div>
+        <div class="form-field">
+          <label>Total seats</label>
+          <input type="number" id="nf-seats" placeholder="150">
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" onclick="closeModal('modal-addflight')">Cancel</button>
+      <button class="btn btn-primary" onclick="addFlight()">Add flight</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
